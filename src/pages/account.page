@@ -1,0 +1,148 @@
+<apex:page standardStylesheets="false" standardController="Account"  extensions="AccountListController" sidebar="false"  >
+    <apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-1.11.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery.blockUI.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-ui.min.js')}"/>
+
+    <style type="text/css">
+        a { text-decoration:none; }
+        a :hover { text-decoration:underline; }
+    </style>
+
+    <script type="text/javascript">
+        function newContact(){
+            var accountId = document.getElementById('{!$Component.contactForm.contacts.accountId}');
+            window.open('https://c.ap1.visual.force.com/apex/NewContact'+'?AccountId='+ accountId.innerHTML,
+                'contactwindow','height=400px, width=300px,alwaysRaised=yes,toolbar=no, menubar=no, scrollbars=no, resizable=no,center=yes,left=750px,top=200px')
+            return false;
+        }
+
+        function newAccount(){
+            window.open('https://c.ap1.visual.force.com/apex/NewAccount',
+                'NewAccount','height=400px, width=300px,alwaysRaised=yes,toolbar=no, menubar=no, scrollbars=no, resizable=no,center=yes,left=750px,top=200px')
+        }
+
+        function reflash(){
+            reload();
+        }
+
+        function updateAccount(){
+            updateAccount();
+        }
+
+        j$ = jQuery.noConflict();
+        function showLoadingDiv() {
+            j$("[id$='contactForm']").block({
+                message: 'Waiting...',
+                css: { padding: '5px'},
+                overlayCSS: { backgroundColor: '#000', opacity: 0.4}
+            });
+        }
+
+        function hideLoadingDiv() {
+             j$("[id$='contactForm']").unblock();
+        }
+
+        function sLoadingDiv() {
+            j$("[id$='accountForm']").block({ message: 'Waiting...',
+            css: { padding: '5px'},
+            overlayCSS: { backgroundColor: '#000', opacity: 0.4}
+            });
+        }
+
+        function hLoadingDiv() {
+             j$("[id$='accountForm']").unblock();
+        }
+
+        function search(){
+            search();
+        }
+    </script>
+    <!--  account list start -->
+    <apex:sectionHeader title="Accounts" subtitle="Home"/>
+    <apex:pageMessages />
+    <apex:form id="accountForm">
+    <apex:actionFunction name="search" action="{!searchAccount}" reRender="accountForm"/>
+    <apex:actionFunction name="updateAccount" reRender="accountForm"/>
+        <apex:pageBlock id="showAccount" >
+            <apex:pageBlockButtons location="top">
+                <Button type="button" onclick="newAccount()">New</Button>
+                  <apex:commandButton value="Mass Delete" action="{!massDeleteAccount}" reRender="accountForm" status="AccountStatus" rendered="{!Accounts.size > 0}"></apex:commandButton>
+                <apex:inputText onKeydown="if(event.keyCode==13){this.blur();search();}"  html-placeholder="SEARCH..." value="{!KeyWord}">
+                </apex:inputText>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!Accounts}" var="MassAccount" >
+                <apex:column >
+                     <apex:inputCheckbox value="{!MassAccount.deleteFlag}"></apex:inputCheckbox>
+                </apex:column>
+                <apex:column headerValue="AccountName">
+                    <apex:commandLink rerender="contactForm" action="{!getContacts}">
+                        {!MassAccount.Account.Name}
+                        <apex:param name="AccountId" value="{!MassAccount.Account.Id}" assignTo="{!AccountId}"/>
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column headerValue="AccountId">
+                    {!MassAccount.Account.Id}
+                </apex:column>
+            </apex:pageBlockTable>
+            <apex:actionStatus id="AccountStatus" onstart="sLoadingDiv()" onstop="hLoadingDiv()"/>
+            <apex:pageBlockButtons location="bottom" rendered="{!TotalPage>1}">
+                <apex:commandButton action="{!firstPage}" value="First" reRender="showAccount" status="AccountStatus">
+                </apex:commandButton>
+                <apex:commandButton action="{!previousPage}" disabled="{!NOT(HasPrevious)}" value="Previous" reRender="showAccount" status="AccountStatus">
+                </apex:commandButton>
+                {!currentPage}/{!TotalPage}
+                <!-- <apex:commandButton action="{!turnToPage}"  reRender="showAccount" value="Turn To"></apex:commandButton> -->
+                <apex:commandButton action="{!nextPage}" disabled="{!NOT(HasNext)}" value="Next" reRender="showAccount" status="AccountStatus">
+                </apex:commandButton>
+                <apex:commandButton action="{!lastPage}" value="Last" reRender="showAccount" status="AccountStatus">
+                </apex:commandButton>
+          </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    <!--  account list start end -->
+    <!--  contact list start -->
+    <apex:form id="contactForm">
+        <apex:actionFunction name="reload" action="{!getContacts}" reRender="contactForm"/>
+        <apex:actionStatus id="deleteStatus" onstart="showLoadingDiv()" onstop="hideLoadingDiv()"/>
+        <apex:pageBlock id="contacts" rendered="{!NOT(ISNULL(AccountId))}" >
+            <apex:outputLabel value="{!AccountId}" id="accountId" style="display:none" />
+            <apex:pageBlockButtons location="top">
+                <button type="button" onclick="newContact()">New</button>
+                <apex:commandButton value="Mass Delete" action="{!massDeleteContact}" reRender="contactForm" status="deleteStatus" rendered="{!Contacts.size > 0}"></apex:commandButton>
+            </apex:pageBlockButtons>
+                <apex:pageBlockTable value="{!Contacts}" var="item" rendered="{!Contacts.size > 0}" id="contactTable">
+                    <apex:column headerValue="Action">
+                        <apex:inputCheckbox value="{!item.deleteFlag}"></apex:inputCheckbox>
+                        <apex:commandButton value="Del" rerender="contactForm" action="{!deleteContact}" status="deleteStatus">
+                            <apex:param name="ContactId" value="{!item.contact.Id}" assignTo="{!ContactId}"/>
+                        </apex:commandButton>
+                        <apex:commandButton onclick="openPopup('{!$Page.EditContact}'+'?contactId='+'{!item.contact.id}',
+                        'lookup',750,200,'width=300,height=480',false,false);
+                        return false;" value="Edit">
+                            <apex:param name="ContactId" value="{!item.contact.id}" assignTo="{!ContactId}"/>
+                        </apex:commandButton>
+                    </apex:column>
+                    <apex:column headerValue="Contact Name">
+                        <apex:outputLink >
+                            {!item.contact.Name}
+                        </apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="Phone">
+                        <apex:outputField value="{!item.contact.phone}">
+                            <apex:inlineEditSupport event="ondblclick" showOnEdit="update"/>
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="Email">
+                        <apex:outputField value="{!item.contact.email}">
+                            <apex:inlineEditSupport event="ondblclick" showOnEdit="update"/>
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="AccountId">
+                        <apex:outputField id="AccouontId" value="{!item.contact.accountId}" >
+                        </apex:outputField>
+                    </apex:column>
+                </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    <!--  contact list end -->
+</apex:page>

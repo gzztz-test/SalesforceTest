@@ -1,0 +1,31 @@
+<apex:page showHeader="false" sidebar="false"  standardController="Contact" extensions="ContactHandleController" >
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-1.11.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery.blockUI.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-ui.min.js')}"/>
+  <script type="text/javascript">
+  j$ = jQuery.noConflict();
+  function showLoadingDiv(){
+     j$("[id$='contactSave']").block({ message: '', css: { padding: '5px'}, overlayCSS: { backgroundColor: '#000', opacity: 0.4}});
+  }
+  function hideLoadingDiv(){
+    j$("[id$='contactSave']").unblock();
+    top.window.close();
+    top.window.opener.reflash();
+  }
+  </script>
+  <apex:pageMessages />
+  <apex:actionStatus id="saveStatus" onstart="showLoadingDiv()" onstop="hideLoadingDiv()"/>
+  <apex:form id="myform">
+     <apex:pageBlock id="contactSave">
+      <apex:pageblockSection title="New Contact" columns="1" >
+        <apex:inputField value="{!contact.lastname}" required="true"> </apex:inputField>
+        <apex:inputField value="{!contact.phone}" required="true"> </apex:inputField>
+        <apex:inputField value="{!contact.Email}" required="true"></apex:inputField>
+      </apex:pageblockSection>
+      <apex:pageBlockButtons location="bottom" >
+        <apex:commandButton value="save" action="{!ContactInsert}"  status="saveStatus" reRender="contactSave" />
+        <apex:commandButton action="{!cancel}" value="cancel"/>
+      </apex:pageBlockButtons>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

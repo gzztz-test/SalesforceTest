@@ -1,0 +1,18 @@
+<apex:page controller="ChartDisplayController">
+    <apex:chart height="400" width="700" data="{!Data}">
+        <apex:axis type="Numeric" position="left" fields="CurrentHours"
+            title="Current Month Hours" grid="true"/>
+        <apex:axis type="Category" position="bottom" fields="Name"
+            title="Team Member">
+        </apex:axis>
+        <apex:lineSeries axis="left" xField="Name" yField="CurrentHours"
+            markerType="circle" markerSize="4" markerFill="#FF0000"/>
+   </apex:chart>
+   <apex:chart height="400" width="700" data="{!Data}">
+        <apex:axis type="Numeric" position="left" fields="HourPercent"
+            title="Total Hours Percentage (%)"/>
+        <apex:axis type="Category" position="bottom" fields="Name"
+            title="Team Member"/>
+        <apex:barSeries orientation="vertical" axis="left" xField="Name" yField="HourPercent"/>
+   </apex:chart>
+</apex:page>

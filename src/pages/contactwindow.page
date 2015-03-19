@@ -1,0 +1,8 @@
+<apex:page showHeader="false" sidebar="false"  standardController="Contact">
+	<apex:form >
+		Name:<apex:inputField value="{!Contact.name}">
+		</apex:inputField>
+		phone:<apex:inputField value="{!Contact.phone}">
+		</apex:inputField>
+	</apex:form>
+</apex:page>

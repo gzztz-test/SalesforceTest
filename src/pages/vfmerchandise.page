@@ -1,0 +1,5 @@
+<apex:page standardController="Merchandise__c" >
+<apex:iframe src="https://www.baidu.com
+" scrolling="false" id="theIframe"/>
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

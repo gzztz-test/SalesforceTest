@@ -1,0 +1,32 @@
+<apex:page showHeader="false" sidebar="false" standardController="Account" extensions="AccountListController" >
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-1.11.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery.blockUI.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-ui.min.js')}"/>
+  <script type="text/javascript">
+  j$ = jQuery.noConflict();
+  function showLoadingDiv() {
+     j$("[id$='accountSave']").block({ message: 'Waiting', css: { padding: '5px'}, overlayCSS: { backgroundColor: '#000', opacity: 0.4}});
+  }
+  function hideLoadingDiv() {
+     j$("[id$='accountSave']").unblock();
+    top.window.close();
+    top.window.opener.updateAccount();
+  }
+  </script>
+  <apex:pageMessages />
+  <apex:actionStatus id="saveStatus" onstart="showLoadingDiv()" onstop="hideLoadingDiv()"/>
+  <apex:form id="myform">
+     <apex:pageBlock id="accountSave">
+      <apex:pageblockSection title="New Account" columns="1" >
+        <apex:inputField value="{!Account.name}" required="true">
+        </apex:inputField>
+        <apex:inputField value="{!Account.phone}" required="true">
+        </apex:inputField>
+      </apex:pageblockSection>
+      <apex:pageBlockButtons location="bottom" >
+        <apex:commandButton value="save" action="{!insertAccount}"  status="saveStatus" reRender="accountSave" />
+        <apex:commandButton action="{!cancel}" value="cancel"/>
+      </apex:pageBlockButtons>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

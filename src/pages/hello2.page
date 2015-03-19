@@ -1,0 +1,20 @@
+<apex:page sidebar="false"  showHeader="true">
+ {!$User.FirstName+' '+$User.LastName}
+  <h1>Hello</h1>
+  <p>Today's Date is {!today()}</p>
+  <p>Next week it will be {!today()+7}</p>
+  {!IF (CONTAINS('salesforce.com','force.com'),'yep','nap')}
+  <apex:pageBlock title="Block">
+      <apex:pageBlockSection title="BlockSection">
+          I'm three components deep!
+      </apex:pageBlockSection>
+      <apex:pageBlockSection title="new section">
+      yeyeye
+      
+      </apex:pageBlockSection>
+        <apex:pageBlockButtons title="111"  >
+       
+        </apex:pageBlockButtons>  
+  </apex:pageBlock>
+  
+</apex:page>

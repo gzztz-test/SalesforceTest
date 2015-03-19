@@ -1,0 +1,44 @@
+<apex:page standardController="Merchandise__c" showHeader="true" sidebar="true">
+  <img class="pageTitleIcon" title="Merchandise" alt="Merchandise" src="/s.gif"></img> 
+  <h2 class="pageDescription">
+     New Merchandise
+</h2>
+  You can create a new Merchandise.
+  <apex:form >
+   
+  <apex:pageBlock >
+  
+  
+  
+  
+  
+  <span class="pbSubExtra"><span class="requiredLegend brandTertiaryFgr"><span class="requiredExampleOuter"><span class="requiredExample">&nbsp;</span></span><span class="requiredMark">*</span><span class="requiredText"> = Required Information</span></span></span><h3>Information<span class="titleSeparatingColon">:</span></h3>
+  
+      <apex:pageblockSection title="aa" columns="1" >
+      
+      
+       Owner:<apex:outputtext value="{!$user.lastname }{! $user.firstname }"/>
+         <apex:inputField value="{!Merchandise__c.name}" required="true"> </apex:inputField>
+         
+          <apex:inputField value="{!Merchandise__c.Price__c}" required="true"></apex:inputField>
+          <apex:inputField value="{!Merchandise__c.Quantity__c}" required="true"> </apex:inputField>
+          
+         
+     
+      </apex:pageblockSection>
+      <apex:pageBlockButtons >
+      <apex:commandButton action="{!save}" value="save"/>
+      <apex:commandButton action="{!save}" value="save"/>
+      <apex:commandButton action="{!cancel}" value="cancel"/>
+      
+      </apex:pageBlockButtons>
+        
+       </apex:pageBlock>
+  
+       </apex:form>
+       
+
+
+  
+
+</apex:page>

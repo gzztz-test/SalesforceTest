@@ -1,0 +1,34 @@
+<apex:page showHeader="false" sidebar="false"  standardController="Contact" extensions="ContactHandleController" >
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-1.11.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery.blockUI.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-ui.min.js')}"/>
+  <script type="text/javascript">
+  j$ = jQuery.noConflict();
+  function showLoadingDiv() {
+    j$("[id$='contactedit']").block({ message: '', css: { padding: '5px'}, overlayCSS:
+    {backgroundColor: '#000', opacity: 0.4}});
+  }
+  function hideLoadingDiv() {
+    j$("[id$='contactedit']").unblock();
+    top.window.close();
+    top.window.opener.reflash();
+  }
+  </script>
+  <apex:actionStatus id="editStatus" onstart="showLoadingDiv()" onstop="hideLoadingDiv()"/> 
+  <apex:form id="myform">
+     <apex:pageBlock id="contactedit">
+      <apex:pageblockSection title="New Contact" columns="1" >
+        <apex:inputField value="{!contact.lastname}" > </apex:inputField>
+        <!-- <apex:inlineEditSupport event="ondblclick" showOnEdit="update"/> -->
+        <apex:inputField value="{!contact.phone}" > </apex:inputField>
+        <!-- <apex:inlineEditSupport event="ondblclick" showOnEdit="update"/> -->
+        <apex:inputField value="{!contact.Email}" ></apex:inputField>
+        <!-- <apex:inlineEditSupport event="ondblclick" showOnEdit="update"/> --> 
+      </apex:pageblockSection>
+      <apex:pageBlockButtons location="bottom" >
+        <apex:commandButton id="update" value="Edit" action="{!editContact}"  status="editStatus" reRender="contactedit" />
+        <apex:commandButton action="{!cancel}" value="cancel"/>
+      </apex:pageBlockButtons>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

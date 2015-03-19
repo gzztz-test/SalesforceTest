@@ -1,0 +1,14 @@
+<apex:page showHeader="true" sidebar="true">
+<apex:includeScript value="{!URLFOR($Resource.jquery,'jquery/jquery-1.11.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.client,'client.js/client.js')}"/>
+
+wahahahahah~~~~~
+<button type="button" onclick="authorizing()">GetToken</button>
+
+<button onclick="openPopup('https://trello.com/1/authorize?response_type=token&key=d1a2d05b30f33b1e22181525fde2b122&return_url=https%3A%2F%2Fc.ap1.visual.force.com&callback_method=postMessage&scope=read',
+                        'lookup',750,200,'width=600,height=600',false,false);
+                        return false;" >gggg</button>
+
+ <a href="https://api.trello.com/1/client.js?key=d1a2d05b30f33b1e22181525fde2b122">clent.js</a>
+
+</apex:page>
